@@ -1,0 +1,20 @@
+{
+  "name": "com.cupkekgames.vfx",
+  "displayName": "CupkekGames VFX",
+  "version": "0.1.0",
+  "author": {
+    "name": "CupkekGames",
+    "url": "https://www.docs.cupkek.games"
+  },
+  "unity": "6000.0",
+  "documentationUrl": "https://docs.cupkek.games/",
+  "description": "VFX runtime: VFXBundle pooled spawner, RenderFeatureManager (darken/undarken layers + fade), Dissolvable + DissolveGroup, OutlineManager abstraction, ShaderColorController + ShaderEmissionController. Shader backends (MKToon, PotaToon) live in sibling packages.",
+  "keywords": [
+    "VFX",
+    "Outline",
+    "Dissolve",
+    "Shader",
+    "CupkekGames"
+  ],
+  "dependencies": {}
+}
