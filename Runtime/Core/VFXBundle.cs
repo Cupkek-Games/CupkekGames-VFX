@@ -21,7 +21,7 @@ namespace CupkekGames.VFX
   public class VFXBundle
   {
     [SerializeField] private GameObject _vfxPrefab;
-    [SerializeField] private ScriptableObject _sfxPlayerAsset;
+    [SerializeField] private SFXPlayerSO _sfxPlayer;
     [Header("Optional")][SerializeField] private Transform _transform;
     [SerializeField] private Vector3 _offset = Vector3.zero;
     [SerializeField] private Quaternion _rotation = Quaternion.identity;
@@ -159,12 +159,11 @@ namespace CupkekGames.VFX
       }
 
       // Play SFX
-      var sfxPlayer = _sfxPlayerAsset as ISFXPlayer;
-      if (sfxPlayer != null)
+      if (_sfxPlayer != null)
       {
         Transform sfxTransform = vfx != null ? vfx.transform : parent.transform;
-        sfxPlayer.Play(sfxTransform);
-        sfxPlayer.RegisterTimeScale(timeBundle, sfxTransform);
+        _sfxPlayer.Play(sfxTransform);
+        _sfxPlayer.RegisterTimeScale(timeBundle, sfxTransform);
       }
 
       if (persistent)
