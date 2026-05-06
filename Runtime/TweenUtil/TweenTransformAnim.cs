@@ -1,4 +1,3 @@
-#if PRIMETWEEN_INSTALLED && UNITASK_INSTALLED
 using UnityEngine;
 using PrimeTween;
 using Cysharp.Threading.Tasks;
@@ -41,4 +40,3 @@ namespace CupkekGames.VFX
     }
   }
 }
-#endif

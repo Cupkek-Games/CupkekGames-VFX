@@ -1,4 +1,3 @@
-#if PRIMETWEEN_INSTALLED && UNITASK_INSTALLED
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,4 +19,3 @@ namespace CupkekGames.VFX
     }
   }
 }
-#endif

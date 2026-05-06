@@ -1,4 +1,3 @@
-#if PRIMETWEEN_INSTALLED
 using UnityEngine;
 using PrimeTween;
 using System.Collections.Generic;
@@ -33,4 +32,3 @@ namespace CupkekGames.VFX
         }
     }
 }
-#endif
