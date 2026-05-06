@@ -32,7 +32,10 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "PRIMETWEEN_INSTALLED",
+        "UNITASK_INSTALLED"
+    ],
     "versionDefines": [
         {
             "name": "PrimeTween.Runtime",
