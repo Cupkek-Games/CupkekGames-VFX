@@ -9,7 +9,7 @@ namespace CupkekGames.VFX
   {
     public float TweenDuration = 0.5f;
     public float TweenDelay = 0f;
-    public CycleMode TweenCycleMode = CycleMode.Rewind;
+    public Sequence.SequenceCycleMode TweenCycleMode = Sequence.SequenceCycleMode.Rewind;
     public Ease TweenEase = Ease.InOutSine;
     public Sequence? TweenSequence = null;
 

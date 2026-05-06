@@ -186,7 +186,7 @@ namespace CupkekGames.VFX
             }
         }
 
-        public async UniTask UnDarkenAsync(ICollection<GameObject> gameObjects)
+        public UniTask UnDarkenAsync(ICollection<GameObject> gameObjects)
         {
             // Then restore the layers to their original state
             var defaultLayer = LayerMask.NameToLayer("Default");
@@ -204,9 +204,10 @@ namespace CupkekGames.VFX
                     }
                 }
             }
+            return UniTask.CompletedTask;
         }
 
-        public async UniTask UnDarkenAsync(GameObject gameObject, bool withChildren)
+        public UniTask UnDarkenAsync(GameObject gameObject, bool withChildren)
         {
             // Then change the layers
             RegistrationScope scope = withChildren ? RegistrationScope.SelfAndChildren : RegistrationScope.Self;
@@ -229,6 +230,7 @@ namespace CupkekGames.VFX
                     }
                 }
             }
+            return UniTask.CompletedTask;
         }
 
         public void ClearNullObjects()
