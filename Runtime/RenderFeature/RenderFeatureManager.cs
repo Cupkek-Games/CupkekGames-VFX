@@ -1,3 +1,4 @@
+#if PRIMETWEEN_INSTALLED && UNITASK_INSTALLED
 using System.Collections.Generic;
 using CupkekGames.AddressableAssets;
 using CupkekGames.SceneManagement;
@@ -315,3 +316,4 @@ namespace CupkekGames.VFX
         }
     }
 }
+#endif

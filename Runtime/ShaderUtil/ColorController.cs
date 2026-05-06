@@ -1,3 +1,4 @@
+#if UNITASK_INSTALLED
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
@@ -94,3 +95,5 @@ namespace CupkekGames.VFX
     }
 }
 
+
+#endif
