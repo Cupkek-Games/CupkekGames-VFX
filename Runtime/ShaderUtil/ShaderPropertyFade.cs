@@ -126,7 +126,7 @@ namespace CupkekGames.VFX
                     Material mat = materials[j];
                     if (mat == null) continue;
 
-                    int materialHash = mat.GetInstanceID();
+                    int materialHash = mat.GetHashCode();
                     _materialHashes[mat] = materialHash;
 
                     foreach (ShaderPropertyFadeData propertyData in _shaderProperties)
@@ -161,7 +161,7 @@ namespace CupkekGames.VFX
                     Material mat = materials[j];
                     if (mat == null) continue;
 
-                    int materialHash = mat.GetInstanceID();
+                    int materialHash = mat.GetHashCode();
 
                     foreach (ShaderPropertyFadeData propertyData in _shaderProperties)
                     {
@@ -312,7 +312,7 @@ namespace CupkekGames.VFX
                     if (!mat.HasProperty(propertyData.PropertyName))
                         continue;
 
-                    int materialHash = mat.GetInstanceID();
+                    int materialHash = mat.GetHashCode();
                     object originalValue = GetPropertyValue(mat, propertyData);
                     if (originalValue != null)
                     {
