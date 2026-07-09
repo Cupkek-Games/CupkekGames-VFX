@@ -11,7 +11,7 @@ namespace CupkekGames.VFX
     public float TweenDelay = 0f;
     public Sequence.SequenceCycleMode TweenCycleMode = Sequence.SequenceCycleMode.Rewind;
     public Ease TweenEase = Ease.InOutSine;
-    public Sequence? TweenSequence = null;
+    [System.NonSerialized] public Sequence? TweenSequence = null;
 
     private void OnDisable()
     {
