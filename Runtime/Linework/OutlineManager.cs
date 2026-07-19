@@ -143,6 +143,13 @@ namespace CupkekGames.VFX
             }
         }
 
+        /// <summary>
+        /// False when the implementation only supports a shared width (e.g. SoftOutline's
+        /// kernel size) — per-index width calls are invalid there. Batch appliers like
+        /// OutlineInitializer must check this before calling SetWidth.
+        /// </summary>
+        public virtual bool SupportsPerIndexWidth => true;
+
         public abstract void SetSharedWidth(float value);
         public abstract void SetWidth(float value, int outlineIndex);
         public abstract void SetColor(Color color, int outlineIndex);

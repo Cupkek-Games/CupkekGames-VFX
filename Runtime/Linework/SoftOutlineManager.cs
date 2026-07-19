@@ -15,6 +15,9 @@ namespace CupkekGames.VFX
     {
         [SerializeField] private SoftOutlineSettings _settings;
 
+        // SoftOutline has one shared kernel size — no per-index width exists.
+        public override bool SupportsPerIndexWidth => false;
+
         public override void SetSharedWidth(float value)
         {
             _settings.kernelSize = (int)(value + 0.5f);
@@ -29,6 +32,15 @@ namespace CupkekGames.VFX
         {
             // hard
             // _settings.sharedColor = color;
+
+            if (outlineIndex < 0 || outlineIndex >= _settings.Outlines.Count)
+            {
+                Debug.LogError(
+                    $"[SoftOutlineManager] SetColor index {outlineIndex} is out of range — " +
+                    $"'{_settings.name}' has {_settings.Outlines.Count} outline(s). " +
+                    "Fix the caller's outline entries or add outlines to the settings asset.", this);
+                return;
+            }
 
             // soft
             _settings.Outlines[outlineIndex].color = color;

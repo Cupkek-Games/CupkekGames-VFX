@@ -38,7 +38,13 @@ namespace CupkekGames.VFX
 
             foreach (var outline in _outlines)
             {
-                manager.SetWidth(outline.width, outline.index);
+                // Soft outlines have a single shared kernel size — per-index
+                // widths don't exist there, only colors apply.
+                if (manager.SupportsPerIndexWidth)
+                {
+                    manager.SetWidth(outline.width, outline.index);
+                }
+
                 manager.SetColor(outline.color, outline.index);
             }
         }
