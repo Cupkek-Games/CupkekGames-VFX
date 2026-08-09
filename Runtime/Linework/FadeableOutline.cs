@@ -72,6 +72,15 @@ namespace CupkekGames.VFX
         Fadeable.OnApply -= OnLocalApply;
       }
 
+      // removeOnOther subscribes RemoveOutline onto the SHARED controller
+      // fadeable, which outlives this object — without this cleanup a destroyed
+      // subscriber gets invoked by the next shared fade (MissingReferenceException).
+      if (_removeOnOther && _controller != null
+          && _outlineIndex < _controller.OutlineController.Count)
+      {
+        RemoveOutline();
+      }
+
       base.OnDisable();
     }
 
