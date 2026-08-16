@@ -3,10 +3,11 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using System;
+using Unity.Scripting.LifecycleManagement;
 
 namespace CupkekGames.VFX
 {
-    public abstract class ColorController : MonoBehaviour
+    public abstract partial class ColorController : MonoBehaviour
     {
         protected Dictionary<Guid, ColorWeight> _overlays = new();
         protected Dictionary<Guid, CancellationTokenSource> _overlayRemoving = new();
@@ -15,6 +16,7 @@ namespace CupkekGames.VFX
         /// Weight of the original color when mixing with overlays.
         /// Set once at game init via <see cref="SetDefaultOriginalColorWeight"/>.
         /// </summary>
+        [NoAutoStaticsCleanup]
         private static int _defaultOriginalColorWeight = 100;
         public static void SetDefaultOriginalColorWeight(int weight) => _defaultOriginalColorWeight = weight;
         protected int OriginalColorWeight => _defaultOriginalColorWeight;

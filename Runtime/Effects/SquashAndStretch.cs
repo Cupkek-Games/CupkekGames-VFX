@@ -1,11 +1,13 @@
 using UnityEngine;
 using PrimeTween;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 
 namespace CupkekGames.VFX
 {
-    public static class SquashAndStretch
+    public static partial class SquashAndStretch
     {
+        [AutoStaticsCleanup]
         private static Dictionary<Transform, Sequence> _sequences = new Dictionary<Transform, Sequence>();
 
         public static void TakeDamage(Transform unitTransform, float bump, float duration)
