@@ -123,11 +123,14 @@ namespace CupkekGames.VFX
 
         ApplySettings();
 
-        // With removeOnOther=true, we control add/remove per-object, but width is still shared per index
+        // With removeOnOther=true, we control add/remove per-object, but width is still shared per index.
+        // Unhook this object first: a fade-in that interrupts its own fade-out would otherwise fire the
+        // shared OnFadeInStart into its own RemoveOutline and strip the outline it just added.
+        Fadeable shared = _controller.OutlineController[_outlineIndex].Fadeable;
+        Unhook(shared);
         AddOutline();
-        _controller.OutlineController[_outlineIndex].Fadeable.FadeIn();
-        _controller.OutlineController[_outlineIndex].Fadeable.OnFadeInStart += RemoveOutline;
-        _controller.OutlineController[_outlineIndex].Fadeable.OnFadeOutComplete += RemoveOutline;
+        shared.FadeIn();
+        Hook(shared);
       }
       // removeOnOther=false: local Fadeable drives width via OnLocalApply, nothing extra needed
     }
@@ -138,12 +141,26 @@ namespace CupkekGames.VFX
       {
         ApplySettings();
 
+        Fadeable shared = _controller.OutlineController[_outlineIndex].Fadeable;
+        Unhook(shared);
         AddOutline();
-        _controller.OutlineController[_outlineIndex].Fadeable.FadeOut();
-        _controller.OutlineController[_outlineIndex].Fadeable.OnFadeInStart += RemoveOutline;
-        _controller.OutlineController[_outlineIndex].Fadeable.OnFadeOutComplete += RemoveOutline;
+        shared.FadeOut();
+        Hook(shared);
       }
       // removeOnOther=false: local Fadeable drives width via OnLocalApply, nothing extra needed
+    }
+
+    // Another object's fade-in on this index, or the shared fade-out completing, removes this outline.
+    private void Hook(Fadeable shared)
+    {
+      shared.OnFadeInStart += RemoveOutline;
+      shared.OnFadeOutComplete += RemoveOutline;
+    }
+
+    private void Unhook(Fadeable shared)
+    {
+      shared.OnFadeInStart -= RemoveOutline;
+      shared.OnFadeOutComplete -= RemoveOutline;
     }
 
     private void ApplySettings()
@@ -203,8 +220,7 @@ namespace CupkekGames.VFX
 
     public void RemoveOutline()
     {
-      _controller.OutlineController[_outlineIndex].Fadeable.OnFadeInStart -= RemoveOutline;
-      _controller.OutlineController[_outlineIndex].Fadeable.OnFadeOutComplete -= RemoveOutline;
+      Unhook(_controller.OutlineController[_outlineIndex].Fadeable);
       _controller.RemoveOutline(gameObject, _outlineIndex);
     }
 
