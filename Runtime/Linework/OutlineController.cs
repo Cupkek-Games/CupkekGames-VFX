@@ -11,6 +11,13 @@ namespace CupkekGames.VFX
         public Color ColorStart = Color.white;
         public Color ColorEnd = Color.white;
 
+        /// <summary>
+        /// The object whose outline this index is currently drawing (removeOnOther
+        /// objects hand the index over: a new owner rises from the faded-out width,
+        /// never from where the previous owner's fade-out stands).
+        /// </summary>
+        public object Owner;
+
         public OutlineController(OutlineManager parent, int outlineIndex)
         {
             _controller = parent;

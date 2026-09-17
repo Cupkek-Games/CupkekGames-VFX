@@ -126,9 +126,18 @@ namespace CupkekGames.VFX
         // With removeOnOther=true, we control add/remove per-object, but width is still shared per index.
         // Unhook this object first: a fade-in that interrupts its own fade-out would otherwise fire the
         // shared OnFadeInStart into its own RemoveOutline and strip the outline it just added.
-        Fadeable shared = _controller.OutlineController[_outlineIndex].Fadeable;
+        OutlineController index = _controller.OutlineController[_outlineIndex];
+        Fadeable shared = index.Fadeable;
         Unhook(shared);
         AddOutline();
+        // A handover: the previous owner may still be mid fade-out at near full
+        // width. Its outline goes with the shared OnFadeInStart below; this one
+        // rises from the faded-out width, the same fade a lone hover gets.
+        if (index.Owner != this)
+        {
+          index.Owner = this;
+          shared.SetValue(shared._out);
+        }
         shared.FadeIn();
         Hook(shared);
       }
@@ -220,7 +229,9 @@ namespace CupkekGames.VFX
 
     public void RemoveOutline()
     {
-      Unhook(_controller.OutlineController[_outlineIndex].Fadeable);
+      OutlineController index = _controller.OutlineController[_outlineIndex];
+      Unhook(index.Fadeable);
+      if (index.Owner == this) index.Owner = null;
       _controller.RemoveOutline(gameObject, _outlineIndex);
     }
 
