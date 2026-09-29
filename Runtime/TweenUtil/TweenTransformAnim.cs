@@ -31,7 +31,7 @@ namespace CupkekGames.VFX
 
     private async UniTask StartTween()
     {
-      await UniTask.Delay((int)TweenDelay * 1000);
+      if (!await WaitStartDelay()) return;
 
       base.TweenSequence = Sequence.Create(cycles: -1, TweenCycleMode)
         .Group(Tween.Position(transform, endValue: originalPosition + _addPosition, TweenDuration, TweenEase))
