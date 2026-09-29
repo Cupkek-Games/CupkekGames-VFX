@@ -9,7 +9,7 @@ Runtime VFX layer. Holds the pooled VFX spawner, render-feature darken/fade cont
 - `VFXBundle` — serializable pooled VFX spawner with optional SFX + tween + time-scaling.
 - `RenderFeatureManager` (`ServiceProvider`) — manages a darken layer for an "everything except X" effect with material fades.
 - `Dissolvable` + `DissolveGroup` + `FadeableOutline` — soft fade-in/out helpers driven by `Fadeable`.
-- `OutlineManager` (abstract) — base for shader-specific outline backends; consumers call `AddOutline`/`RemoveOutline`/`SetWidth`/`SetColor`.
+- `OutlineManager` (abstract) — base for shader-specific outline backends; consumers call `AddOutline`/`RemoveOutline`/`SetWidth`/`SetColor`, or `Hold`/`Release` when several sources can want the same outline on one object (it stays until the last source lets go).
 - `ShaderColorController`, `ShaderEmissionController` — weighted-source overrides for material color/emission, returning `Guid` handles.
 
 ## Dependencies

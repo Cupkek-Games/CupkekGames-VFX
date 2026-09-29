@@ -16,6 +16,8 @@ namespace CupkekGames.VFX
         public List<OutlineController> OutlineController => _outlineController;
         private List<Dictionary<GameObject, Renderer[]>> _renderers = new();
         private List<Dictionary<Renderer, uint>> _originalLayers = new();
+        // Who holds each object's outline, per index (Hold / Release).
+        private List<Dictionary<GameObject, HashSet<object>>> _holders = new();
 
         /// <summary>
         /// The FadeableOutline currently performing a temporary index swap on this manager.
@@ -48,6 +50,7 @@ namespace CupkekGames.VFX
             {
                 _renderers.Add(new());
                 _originalLayers.Add(new());
+                _holders.Add(new());
 
                 _outlineController.Add(new(this, i));
             }
@@ -118,8 +121,65 @@ namespace CupkekGames.VFX
             reference.Add(this, outlineIndex);
         }
 
+        /// <summary>
+        /// <paramref name="source"/> holds the outline of index <paramref name="outlineIndex"/>
+        /// on <paramref name="parent"/>. Several sources can hold the same one (a hover, a
+        /// selection, a marker): it is drawn from the first hold and stays until the last
+        /// source lets go (<see cref="Release"/>), so one source never takes away another's.
+        /// It draws round the parent's meshes as they are at the first hold; particles are
+        /// left unlined. <see cref="RemoveOutline"/> ends it for every holder.
+        /// </summary>
+        public void Hold(GameObject parent, object source, int outlineIndex)
+        {
+            if (parent == null) throw new System.ArgumentNullException(nameof(parent));
+            if (source == null) throw new System.ArgumentNullException(nameof(source));
+
+            if (!_holders[outlineIndex].TryGetValue(parent, out HashSet<object> holders))
+            {
+                holders = new HashSet<object>();
+                _holders[outlineIndex].Add(parent, holders);
+            }
+
+            if (!holders.Add(source) || holders.Count > 1) return;
+            AddOutline(parent, Meshes(parent), outlineIndex);
+        }
+
+        /// <summary>
+        /// <paramref name="source"/> lets go of the outline it held on <paramref name="parent"/>;
+        /// the outline goes when no source holds it. A parent already destroyed has nothing to release.
+        /// </summary>
+        public void Release(GameObject parent, object source, int outlineIndex)
+        {
+            if (parent == null) return;
+            if (!_holders[outlineIndex].TryGetValue(parent, out HashSet<object> holders)) return;
+            if (!holders.Remove(source) || holders.Count > 0) return;
+
+            RemoveOutline(parent, outlineIndex);
+        }
+
+        /// <summary>Whether any source holds the outline of index <paramref name="outlineIndex"/> on <paramref name="parent"/>.</summary>
+        public bool IsHeld(GameObject parent, int outlineIndex)
+        {
+            return parent != null
+                && _holders[outlineIndex].TryGetValue(parent, out HashSet<object> holders)
+                && holders.Count > 0;
+        }
+
+        private static Renderer[] Meshes(GameObject parent)
+        {
+            List<Renderer> meshes = new();
+            foreach (Renderer renderer in parent.GetComponentsInChildren<Renderer>())
+            {
+                if (renderer is ParticleSystemRenderer) continue;
+                meshes.Add(renderer);
+            }
+
+            return meshes.ToArray();
+        }
+
         public void RemoveOutline(GameObject parent, int outlineIndex)
         {
+            _holders[outlineIndex].Remove(parent);
             if (_renderers[outlineIndex].Remove(parent, out Renderer[] renderers))
             {
                 foreach (var renderer in renderers)
