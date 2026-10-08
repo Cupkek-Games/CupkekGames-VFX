@@ -68,27 +68,15 @@ namespace CupkekGames.VFX
 
       GameObjectPool pool = _poolList.GetPool(_id);
       pool.OnCreateEvent += OnCreateEvent;
-      pool.OnDestroyObjectEvent += OnDestroyEvent;
       pool.Prewarm();
 
       // Debug.Log("Prewarmed VFXBundle: " + _vfxPrefab.name + " with id: " + _id);
     }
 
+    // Every effect stays lit under a spotlight's dim.
     private void OnCreateEvent(GameObject gameObject)
     {
-      RenderFeatureManager manager = ServiceLocator.Get<RenderFeatureManager>();
-      manager.Register(gameObject, true);
-    }
-
-    private void OnDestroyEvent(GameObject gameObject)
-    {
-      RenderFeatureManager manager = ServiceLocator.Get<RenderFeatureManager>(true);
-      if (manager == null)
-      {
-        return;
-      }
-
-      manager.Unregister(gameObject, true);
+      ServiceLocator.Get<SceneSpotlight>().MarkEffect(gameObject);
     }
 
     public void Dispose()
@@ -99,7 +87,6 @@ namespace CupkekGames.VFX
         if (pool != null)
         {
           pool.OnCreateEvent -= OnCreateEvent;
-          pool.OnDestroyObjectEvent -= OnDestroyEvent;
         }
         _poolList.Dispose();
         _poolList = null;
@@ -107,10 +94,9 @@ namespace CupkekGames.VFX
     }
 
     public async UniTask<GameObject> Play(GameObject parent, Transform transform, CancellationToken? ct,
-      TimeBundle timeBundle,
-      RenderFeatureManager renderFeatureManager)
+      TimeBundle timeBundle)
     {
-      return await Play(parent, transform.position, transform.rotation, ct, timeBundle, renderFeatureManager);
+      return await Play(parent, transform.position, transform.rotation, ct, timeBundle);
     }
 
     public async UniTask<GameObject> Play(
@@ -119,7 +105,6 @@ namespace CupkekGames.VFX
       Quaternion rotation,
       CancellationToken? ct,
       TimeBundle timeBundle,
-      RenderFeatureManager renderFeatureManager,
       bool persistent = false)
     {
       if (ct is { IsCancellationRequested: true })
@@ -147,8 +132,6 @@ namespace CupkekGames.VFX
         TransformUtils.SetScaleRecursive(vfx.transform, _scale);
 
         vfx.SetActive(true);
-
-        renderFeatureManager?.UnDarkenAsync(vfx, true).Forget();
 
         // Debug.Log("Played VFX: " + vfx.name + " with id: " + _id);
 
