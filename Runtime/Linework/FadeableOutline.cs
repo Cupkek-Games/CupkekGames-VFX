@@ -14,8 +14,8 @@ namespace CupkekGames.VFX
     private Renderer[] _renderers;
     private OutlineManager _controller;
     [SerializeField] private OutlineType _outlineType;
-    [SerializeField] public int _outlineIndex;
-    [SerializeField] public bool _removeOnOther = true;
+    [SerializeField] private int _outlineIndex;
+    [SerializeField] private bool _removeOnOther = true;
     [SerializeField] private Color _colorStart = Color.white;
     [SerializeField] private Color _colorEnd = Color.white;
 
@@ -185,6 +185,28 @@ namespace CupkekGames.VFX
 
       _controller.OutlineController[_outlineIndex].ColorStart = _colorStart;
       _controller.OutlineController[_outlineIndex].ColorEnd = _colorEnd;
+    }
+
+    /// <summary>The outline index this outline is on now.</summary>
+    public int OutlineIndex => _outlineIndex;
+
+    /// <summary>
+    /// Sets the index this outline rests on, without moving an outline already
+    /// added: configuration before use. <see cref="SetOutlineIndex(int)"/> moves one.
+    /// </summary>
+    public void SetBaseIndex(int outlineIndex)
+    {
+      _outlineIndex = outlineIndex;
+    }
+
+    /// <summary>
+    /// True: this object adds and removes its own outline on a shared per-index width.
+    /// False: its own Fadeable drives the index's width and color directly. Set before it is enabled.
+    /// </summary>
+    public bool RemoveOnOther
+    {
+      get => _removeOnOther;
+      set => _removeOnOther = value;
     }
 
     public void SetOutlineIndex(int outlineIndex)
