@@ -184,7 +184,9 @@ namespace CupkekGames.VFX
             {
                 foreach (var renderer in renderers)
                 {
-                    if (_originalLayers[outlineIndex].Remove(renderer, out uint original))
+                    // A renderer destroyed before its outline was let go (a scene's teardown destroys in
+                    // no set order): its entry goes, and there is nothing left to restore on it.
+                    if (_originalLayers[outlineIndex].Remove(renderer, out uint original) && renderer != null)
                     {
                         renderer.renderingLayerMask &= ~(uint)_outlineLayer[outlineIndex];
                     }
